@@ -38,7 +38,7 @@ const columns = [
         dataIndex: 'customerName',
         key: 'customerName',
         render: (_:any,record:any) => {
-            return <p>{record.rentalContract.customerName}</p>;
+            return <p>{record.rentalContract?.customerName}</p>;
         }
     },
     {
@@ -46,7 +46,7 @@ const columns = [
         dataIndex: 'startDate',
         key: 'startDate',
         render: (_:any,record:any) => {
-            const formattedstartDate = moment(record.rentalContract.endDate).format('DD-MM-YYYY');
+            const formattedstartDate = moment(record.rentalContract?.endDate).format('DD-MM-YYYY');
             return <p>{formattedstartDate}</p>;
         }
     },
@@ -55,7 +55,7 @@ const columns = [
         dataIndex: 'endDate',
         key: 'endDate',
         render: (_:any,record:any) => {
-            const formattedendDate = moment(record.rentalContract.endDate).format('DD-MM-YYYY');
+            const formattedendDate = moment(record.rentalContract?.endDate).format('DD-MM-YYYY');
             return <p>{formattedendDate}</p>;
         }
     },

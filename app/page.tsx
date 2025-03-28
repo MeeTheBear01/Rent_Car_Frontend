@@ -12,8 +12,7 @@ type FieldType = {
 };
 
 const Home = () => {
-
-  const [Data,setData] = useState()
+  const [Data, setData] = useState()
 
   const [form] = Form.useForm();
   const { RangePicker } = DatePicker;
@@ -21,7 +20,7 @@ const Home = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('http://localhost:5298/api/Vehicles');
+        const response = await fetch('https://localhost:7216/api/Vehicles');
         const jsonData = await response.json();
         setData(jsonData);
         // setFilteredData(jsonData);
@@ -30,9 +29,9 @@ const Home = () => {
       }
     }
     fetchData();
-  },[])
+  }, [])
 
-  const onFinish: FormProps<FieldType>['onFinish'] = async(values: any) => {
+  const onFinish: FormProps<FieldType>['onFinish'] = async (values: any) => {
 
     if (values["range-picker"]) {
       const [startDate, endDate] = values["range-picker"];
@@ -40,11 +39,11 @@ const Home = () => {
       const start = dayjs(startDate).format('DD/MM/YYYY');
       const end = dayjs(endDate).format('DD/MM/YYYY');
 
-      console.log('start',start,end)
+      console.log('start', start, end)
 
       try {
         console.log('if')
-        const response = await fetch('http://localhost:5298/api/Vehicles/search', {
+        const response = await fetch('https://localhost:7216/api/Vehicles/search', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -65,10 +64,10 @@ const Home = () => {
       } catch (error) {
         console.error('Error sending data:', error);
       }
-    }else{
+    } else {
       try {
         console.log("else")
-        const response = await fetch('http://localhost:5298/api/Vehicles/search', {
+        const response = await fetch('https://localhost:7216/api/Vehicles/search', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -115,7 +114,7 @@ const Home = () => {
             name="customerName"
           >
             <Input style={{ width: '250px' }} />
-            
+
           </Form.Item>
 
           <Form.Item name="range-picker" label="Date">
@@ -132,7 +131,7 @@ const Home = () => {
         </div>
       </Form>
 
-      <DataTable datatoTable={Data}/>
+      <DataTable datatoTable={Data} />
     </>
   )
 }
