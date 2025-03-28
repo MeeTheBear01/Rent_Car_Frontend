@@ -2,13 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import type { FormProps } from 'antd';
 import { Button, Form, Input, DatePicker } from 'antd';
-import moment from 'moment-timezone';
 import DataTable from './Component/DataTable';
+import dayjs from 'dayjs';
 
 type FieldType = {
   customerName?: string;
-  password?: string;
-  remember?: string;
+  startDate?: string;
+  endDate?: string;
 };
 
 const Home = () => {
@@ -34,24 +34,23 @@ const Home = () => {
 
   const onFinish: FormProps<FieldType>['onFinish'] = async(values: any) => {
 
-    // แปลงค่าจาก range-picker ให้เป็นเวลาที่เหมาะสม
     if (values["range-picker"]) {
       const [startDate, endDate] = values["range-picker"];
 
-      // แปลงจาก ISO string ให้เป็นวันที่
-      const start = moment(startDate).tz('Asia/Bangkok').format('DD-MM-YYYY');
-      const end = moment(endDate).tz('Asia/Bangkok').format('DD-MM-YYYY');
+      const start = dayjs(startDate).format('DD/MM/YYYY');
+      const end = dayjs(endDate).format('DD/MM/YYYY');
 
-      console.log('start',startDate,endDate)
+      console.log('start',start,end)
 
       try {
+        console.log('if')
         const response = await fetch('http://localhost:5298/api/Vehicles/search', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            customerName: values.customerName,
+            customerName: values.customerName || "",
             startDateStr: start,
             endDateStr: end,
           }),
@@ -68,6 +67,7 @@ const Home = () => {
       }
     }else{
       try {
+        console.log("else")
         const response = await fetch('http://localhost:5298/api/Vehicles/search', {
           method: 'POST',
           headers: {
@@ -115,11 +115,12 @@ const Home = () => {
             name="customerName"
           >
             <Input style={{ width: '250px' }} />
+            
           </Form.Item>
 
           <Form.Item name="range-picker" label="Date">
             <RangePicker
-              format="YYYY-MM-DD"
+              format="DD/MM/YYYY"
             />
           </Form.Item>
 
