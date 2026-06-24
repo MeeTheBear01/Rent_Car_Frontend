@@ -1,33 +1,19 @@
 'use client'
-import { Button, DatePicker, Form, FormProps, Input } from "antd";
-import dayjs from "dayjs";
 import { use, useEffect, useState } from "react"
 import DataTable from "../Component/DataTable";
+import type { Vehicle } from "../Component/DataTable";
 
-  type DataType = [{
-    id: number,
-    brand: string,
-    licensePlate: string,
-    model: string,
-    customerName: string,
-    startDate: string,
-    endDate: string,
-    rentalContract: {
-        customerName: string;
-        startDate: string;
-        endDate: string;
-    }
-  }]
+const API_BASE_URL = 'http://localhost:5213/api';
 
-const contractId  = ({params}:{params: Promise<{ contractId: string }>}) => {
+const ContractDetail = ({params}:{params: Promise<{ contractId: string }>}) => {
 
     const { contractId } = use(params);
-    const [Data,setData] = useState<DataType[]>([]);
+    const [Data,setData] = useState<Vehicle[]>([]);
     
     useEffect(() => {
         async function fetchDataByID() {
             try {
-                const response = await fetch(`https://localhost:7216/api/Vehicles/${contractId}`);
+                const response = await fetch(`${API_BASE_URL}/Vehicles/${contractId}`);
                 const jsonData = await response.json();
                 setData([jsonData]);
             } catch (error) {
@@ -44,4 +30,4 @@ const contractId  = ({params}:{params: Promise<{ contractId: string }>}) => {
       )
 }
 
-export default contractId;
+export default ContractDetail;
