@@ -25,7 +25,7 @@ import CollectionGrid from '../components/organisms/CollectionGrid';
 import ResultsSection from '../components/organisms/ResultsSection';
 import AdminDashboard from '../components/organisms/AdminDashboard';
 
-const API_BASE_URL = 'http://localhost:7216/api';
+const API_BASE_URL = 'https://localhost:7216/api';
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
 const AUTH_STORAGE_KEY = 'rent_car_auth';
 
@@ -62,6 +62,7 @@ declare global {
           initialize: (options: {
             client_id: string;
             callback: (response: GoogleCredentialResponse) => void;
+            use_fedcm: boolean;
           }) => void;
           renderButton: (
             element: HTMLElement,
@@ -221,6 +222,7 @@ const Home = () => {
       window.google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleGoogleCredential,
+        use_fedcm: false,
       });
       window.google.accounts.id.renderButton(googleButtonRef.current, {
         theme: 'filled_black',
@@ -301,6 +303,7 @@ const Home = () => {
       setSession(data);
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(data));
     } catch (error) {
+      console.error("เกิดข้อผิดพลาดตอนยืนยันกับ Backend:", error);
       setAuthMessage(error instanceof Error ? error.message : 'Google login failed.');
     } finally {
       setAuthLoading(false);
@@ -406,10 +409,15 @@ const Home = () => {
       }}
     >
       <main className="site-shell">
-        <TopBar isAdmin={isAdmin} session={session} logout={logout} />
+        <TopBar
+          isAdmin={isAdmin}
+          session={session}
+          logout={logout}
+          onLoginClick={() => setIsLoginModalOpen(true)}
+        />
         <HeroSearch form={form} onFinish={onFinish} loading={loading} rentedVehiclesCount={rentedVehicles.length} usingFallback={usingFallback} />
         <div className='contents'>
-          {!session && (
+        {!session && (
             <div style={{ textAlign: 'center', padding: '40px 20px', background: 'rgba(155, 85, 255, 0.05)', borderRadius: '8px', marginBottom: '40px' }}>
               <h2 style={{ marginBottom: '16px' }}>Login to Book</h2>
               <p style={{ marginBottom: '20px', color: '#999' }}>Sign in with Google to reserve your rental car.</p>

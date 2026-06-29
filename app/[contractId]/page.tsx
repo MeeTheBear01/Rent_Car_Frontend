@@ -1,9 +1,9 @@
 'use client'
 import { use, useEffect, useState } from "react"
-import DataTable from "../Component/DataTable";
-import type { Vehicle } from "../Component/DataTable";
+import DataTable from "../../components/organisms/DataTable";
+import type { Vehicle } from "../../components/organisms/DataTable";
 
-const API_BASE_URL = 'http://localhost:5213/api';
+const API_BASE_URL = 'https://localhost:7216/api';
 
 const ContractDetail = ({params}:{params: Promise<{ contractId: string }>}) => {
 

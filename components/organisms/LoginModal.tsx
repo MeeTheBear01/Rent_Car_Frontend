@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Modal, Button, Tag } from 'antd';
 
 type AuthUser = {
@@ -34,47 +34,6 @@ const LoginModal: React.FC<Props> = ({
   const [profileImageError, setProfileImageError] = React.useState(false);
   const isAdmin = session?.user.role === 'admin';
 
-  useEffect(() => {
-    if (!GOOGLE_CLIENT_ID || session || !isOpen || !googleButtonRef.current) {
-      return;
-    }
-
-    const renderGoogleButton = () => {
-      if (!window.google || !googleButtonRef.current) {
-        return;
-      }
-
-      window.google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: () => {
-          // Callback handled by parent component
-        },
-      });
-      window.google.accounts.id.renderButton(googleButtonRef.current, {
-        theme: 'filled_black',
-        size: 'large',
-        shape: 'pill',
-        text: 'signin_with',
-      });
-    };
-
-    const existingScript = document.querySelector<HTMLScriptElement>(
-      'script[src="https://accounts.google.com/gsi/client"]',
-    );
-
-    if (existingScript) {
-      renderGoogleButton();
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    script.onload = renderGoogleButton;
-    document.body.appendChild(script);
-  }, [GOOGLE_CLIENT_ID, session, isOpen, googleButtonRef]);
-
   return (
     <Modal
       title={session ? 'Account Profile' : 'Login to Book'}
@@ -82,7 +41,7 @@ const LoginModal: React.FC<Props> = ({
       onCancel={onClose}
       footer={null}
       centered
-      width={500}
+      width={550}
     >
       {session ? (
         <div className="profile-row" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -116,11 +75,11 @@ const LoginModal: React.FC<Props> = ({
             <p style={{ margin: '4px 0 8px 0', fontSize: '12px', color: '#999' }}>
               {session.user.email}
             </p>
-            <Tag color={isAdmin ? 'purple' : 'blue'}>{session.user.role}</Tag>
-          </div>
+            <Tag color={isAdmin ? 'purple' : 'blue'} style={!isAdmin ? { width:"10%" }:{width:"13%"}}>{session.user.role}</Tag>
           <Button type="primary" danger onClick={logout}>
             Logout
           </Button>
+          </div>
         </div>
       ) : (
         <div style={{ textAlign: 'center' }}>

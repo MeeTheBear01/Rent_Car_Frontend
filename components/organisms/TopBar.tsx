@@ -6,16 +6,19 @@ type AuthUser = {
   name: string;
   picture?: string;
   role: 'user' | 'admin';
+  contractId?: string;
 };
 
 type Props = {
   isAdmin: boolean;
   session: { user: AuthUser } | null;
   logout: () => void;
+  onLoginClick: () => void;
 };
 
-const TopBar: React.FC<Props> = ({ isAdmin, session, logout }) => {
+const TopBar: React.FC<Props> = ({ isAdmin, session, logout, onLoginClick }) => {
   const [imageError, setImageError] = useState(false);
+  const contractId = session?.user?.contractId;
 
   const avatarContent = session?.user.picture && !imageError ? (
     <img
@@ -102,10 +105,10 @@ const TopBar: React.FC<Props> = ({ isAdmin, session, logout }) => {
         <a href="#home">Home</a>
         <a href="#how">How it works</a>
         <a href="#collection">Cars</a>
-        <a href="#dashboard">Manage booking</a>
+        <a href={contractId ? `/${contractId}` : '#'}>Manage booking</a>
       </div>
       <div style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        {session && (
+        {session ? (
           <Dropdown
             overlay={overlay}
             trigger={['click']}
@@ -115,6 +118,10 @@ const TopBar: React.FC<Props> = ({ isAdmin, session, logout }) => {
           >
             <div style={{ cursor: 'pointer' }}>{avatarContent}</div>
           </Dropdown>
+        ) : (
+          <Button type="primary" onClick={onLoginClick}>
+            Login
+          </Button>
         )}
       </div>
     </nav>
